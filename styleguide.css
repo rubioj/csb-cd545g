@@ -1,0 +1,15 @@
+:root { 
+  --black: #000000;
+  --kabul: #574b3f;
+ 
+  --font-size-m: 24px;
+ 
+  --font-family-fjord-one: "Fjord-One", Helvetica;
+}
+.fjord-one-normal-kabul-24px {
+  color: var(--kabul);
+  font-family: var(--font-family-fjord-one);
+  font-size: var(--font-size-m);
+  font-style: normal;
+  font-weight: 400;
+}

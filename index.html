@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <!--<meta name=description content="This site was generated with Anima. www.animaapp.com"/>-->
+    <!-- <link rel="shortcut icon" type=image/png href="https://animaproject.s3.amazonaws.com/home/favicon.png" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <link rel="shortcut icon" type="image/png" href="https://animaproject.s3.amazonaws.com/home/favicon.png" />
+    <link rel="stylesheet" type="text/css" href="index.css" />
+    <link rel="stylesheet" type="text/css" href="styleguide.css" />
+    <link rel="stylesheet" type="text/css" href="globals.css" />
+  </head>
+  <body style="margin: 0">
+    <input type="hidden" id="anPageName" name="page" value="index" />
+    <div class="container-center-horizontal">
+      <div class="index screen">
+        <div class="overlay">
+          <a href="javascript:HideOverlay('index', 'animate-disappear');" class="align-self-flex-end"
+            ><img
+              class="iconography-caesarzkn"
+              src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+              anima-src="https://anima-uploads.s3.amazonaws.com/projects/64e7f49bfc358f17625d3e59/releases/64eaad864850be3f0cc9c969/img/iconography---caesarzkn.svg"
+              alt="Iconography - Caesarzkn"
+            />
+          </a>
+          <div class="frame-5">
+            <h1 class="place place-2 fjord-one-normal-kabul-24px">home</h1>
+            <div class="portfolio fjord-one-normal-kabul-24px">portfolio</div>
+            <div class="place-1 place-2 fjord-one-normal-kabul-24px">contact</div>
+          </div>
+          <div class="overlap-group">
+            <div class="art-in-conversation-with-nature">Art in conversation<br />with nature</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      isHidden = function (e) {
+        if (!(e instanceof HTMLElement)) return false;
+        if (getComputedStyle(e).display == "none") return true;
+        else if (e.parentNode && isHidden(e.parentNode)) return true;
+        return false;
+      };
+
+      loadAsyncSrcForTag = function (tag) {
+        var elements = document.getElementsByTagName(tag);
+        var toLoad = [];
+        for (var i = 0; i < elements.length; i++) {
+          var e = elements[i];
+          var src = e.getAttribute("src");
+          var loaded =
+            src != undefined &&
+            src.length > 0 &&
+            src != "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
+          if (loaded) continue;
+          var asyncSrc = e.getAttribute("anima-src");
+          if (asyncSrc == undefined || asyncSrc.length == 0) continue;
+          if (isHidden(e)) continue;
+          toLoad.push(e);
+        }
+        // Top first
+        toLoad.sort(function (a, b) {
+          return getTop(a) - getTop(b);
+        });
+        for (var i = 0; i < toLoad.length; i++) {
+          var e = toLoad[i];
+          var asyncSrc = e.getAttribute("anima-src");
+          e.setAttribute("src", asyncSrc);
+        }
+      };
+
+      pauseHiddenVideos = function (tag) {
+        var elements = document.getElementsByTagName("video");
+        for (var i = 0; i < elements.length; i++) {
+          var e = elements[i];
+          var isPlaying = !!(e.currentTime > 0 && !e.paused && !e.ended && e.readyState > 2);
+          var isHiddenStatus = isHidden(e);
+          if (!isPlaying && !isHiddenStatus && e.getAttribute("autoplay") == "autoplay") {
+            e.play();
+          } else if (isPlaying && isHiddenStatus) {
+            e.pause();
+          }
+        }
+      };
+
+      loadAsyncSrc = function (tag) {
+        loadAsyncSrcForTag("img");
+        loadAsyncSrcForTag("iframe");
+        loadAsyncSrcForTag("video");
+        pauseHiddenVideos();
+      };
+
+      var getTop = function (e) {
+        var top = 0;
+        do {
+          top += e.offsetTop || 0;
+          e = e.offsetParent;
+        } while (e);
+        return top;
+      };
+
+      // On load
+      loadAsyncSrc();
+
+      // On resize
+      old_onResize = window.onresize;
+      new_onResize = undefined;
+
+      updateOnResize = function () {
+        if (new_onResize == undefined || window.onresize != new_onResize) {
+          new_onResize = function (x) {
+            if (old_onResize != undefined) old_onResize(x);
+            loadAsyncSrc();
+          };
+          window.onresize = new_onResize;
+          // Make sure not overriden
+          setTimeout(function () {
+            updateOnResize();
+          }, 3000);
+        }
+      };
+      updateOnResize();
+
+      // IE
+      setTimeout(function () {
+        loadAsyncSrc();
+      }, 200);
+    </script>
+  </body>
+</html>
